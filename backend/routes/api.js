@@ -3,6 +3,7 @@ const request = require('request')
 
 const { isAuthenticated } = require('../middlewares/isAuthenticated')
 const Game = require('../models/games')
+const User = require('../models/user')
 
 const router = express.Router()
 
@@ -19,19 +20,26 @@ router.get('/getnews', (req, res) => {
 })
 
 // ======== User API ========
-router.get('/profile', isAuthenticated, async (req, res, next) => {
+router.get('/api/users', async (req, res, next) => {
   try {
-    const games = await Game.find()
-    res.send(games)
+    const users = await User.find()
+    res.send(users)
   } catch (err) {
-    next(new Error('Could not get games'))
+    next(new Error('Could not get users'))
   }
 })
 
-router.post('/add', isAuthenticated, async (req, res, next) => {
-  const { game } = req.body
+router.post('/api/add', isAuthenticated, async (req, res, next) => {
+  const { _id, game } = req.body
   try {
-    await Game.create({ game })
+    console.log("here1")
+    User.findByIdAndUpdate(
+      _id,
+      {$push: {"games": game}},
+      function(err, model) {
+        if (err !== null) console.log(err)
+      }
+    )
     res.send('Game added')
   } catch (err) {
     next(new Error('could not add Game'))

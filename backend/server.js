@@ -7,7 +7,7 @@ const { errorHandler } = require('./middlewares/errorHandler')
 
 // Routes
 const AccountRouter = require('./routes/account')
-const NewsRouter = require('./routes/api')
+const APIRouter = require('./routes/api')
 
 const app = express()
 
@@ -36,7 +36,7 @@ app.use(session({
 }))
 
 app.use('/account', AccountRouter)
-app.use('', NewsRouter)
+app.use('', APIRouter)
 app.use(errorHandler)
 
 // set favicon
