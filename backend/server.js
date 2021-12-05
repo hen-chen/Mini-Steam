@@ -7,16 +7,16 @@ const { errorHandler } = require('./middlewares/errorHandler')
 
 // Routes
 const AccountRouter = require('./routes/account')
-const NewsRouter = require('./routes/news')
+const NewsRouter = require('./routes/api')
 
 const app = express()
 
-// const MONGO_URI = process.env.MONGODB_URI || 'mongodb+srv://dbUser:dbUserPassword@cluster0.28lky.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
+const MONGO_URI = process.env.MONGODB_URI || 'mongodb+srv://dbUser:dbUserPassword@cluster0.28lky.mongodb.net/Steam?retryWrites=true&w=majority'
 
-// mongoose.connect(MONGO_URI, {
-//   useNewUrlParser: true,
-//   useUnifiedTopology: true,
-// })
+mongoose.connect(MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
 
 // app.use((req, res, next) => {
 //   res.header("Access-Control-Allow-Origin", "*")
@@ -24,7 +24,7 @@ const app = express()
 //   next()
 // })
 
-// app.use(express.static('dist'))
+app.use(express.static('dist'))
 
 // handling POST -> req.body
 app.use(express.json())
@@ -39,15 +39,15 @@ app.use('/account', AccountRouter)
 app.use('', NewsRouter)
 app.use(errorHandler)
 
-// // set favicon
-// app.get('/favicon.ico', (req, res) => {
-//   res.status(404).send()
-// })
+// set favicon
+app.get('/favicon.ico', (req, res) => {
+  res.status(404).send()
+})
 
-// // set the initial entry point
-// app.get('*', (req, res) => {
-//   res.sendFile(path.join(__dirname, '../dist/index.html'))
-// })
+// set the initial entry point
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../dist/index.html'))
+})
 
 app.listen(3000, () => {
   console.log('listening on port 3000')
