@@ -1,10 +1,11 @@
 import React from 'react'
 
 import Home from './components/Home'
+import './App.css'
 
 const App = () => (
   <>
-    <h1> MINI STEAM </h1>
+    <h1 align="center"> Mini Steam </h1>
     <Home />
   </>
 )

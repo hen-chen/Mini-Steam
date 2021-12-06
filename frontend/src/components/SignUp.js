@@ -14,7 +14,7 @@ const SignUp = () => {
           username,
           password,
         })
-        if (data === 'User created') nav('/')
+        if (data === 'User created') nav('/account/login')
         else window.alert('error')
       } catch (err) {
         window.alert('unable to sign up!')
