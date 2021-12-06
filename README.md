@@ -1,6 +1,6 @@
 # Mini-Steam
 
-Mini Steam app using express, react, MongoDB, external API
+Mini Steam app using Express.js, React.js, MongoDB, and an External API
 
 API found here: https://steamspy.com/api.php?request=top100in2weeks
 
