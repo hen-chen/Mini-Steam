@@ -9,7 +9,9 @@ const router = express.Router()
 
 router.get('/getgames', async (req, res) => {
   try {
-    const url = await fetch('https://steamspy.com/api.php?request=top100in2weeks')
+    const url = await fetch(
+      'https://steamspy.com/api.php?request=top100in2weeks'
+    )
     const urlJSON = await url.json()
     res.send(urlJSON)
   } catch (err) {
@@ -32,8 +34,8 @@ router.post('/api/add', isAuthenticated, async (req, res, next) => {
   try {
     User.findByIdAndUpdate(
       _id,
-      {$push: {"games": game}},
-      function(err, model) {
+      { $push: { games: game } },
+      function (err, model) {
         if (err !== null) console.log(err)
       }
     )
@@ -43,18 +45,23 @@ router.post('/api/add', isAuthenticated, async (req, res, next) => {
   }
 })
 
-router.post('/api/remove', isAuthenticated, async (req, res, next) => {
-  const { _id, game } = req.body
-  console.log(game)
+router.post('/api/friend', isAuthenticated, async (req, res, next) => {
+  const { _id, friend } = req.body
   try {
-    User.updateOne(
-      { _id} ,
-      // {$pull: {"games": game}},
-      {$pullAll: {games: [game]}},
-    )
-    res.send('Game removed')
+    const user = await User.findOne({ username: friend })
+    if (!user) res.send('Friend not added')
+    else {
+      User.findByIdAndUpdate(
+        _id,
+        { $push: { friends: friend } },
+        function (err, model) {
+          if (err !== null) console.log(err)
+        }
+      )
+      res.send('Friend added')
+    }
   } catch (err) {
-    next(new Error('could not remove Game'))
+    next(new Error('could not add Friend'))
   }
 })
 

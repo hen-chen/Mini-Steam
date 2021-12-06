@@ -25,6 +25,7 @@ router.post('/login', async (req, res, next) => {
     else {
       const { password: passDB } = user
       if (password === passDB) {
+        req.session.user = user
         req.session.username = username
         req.session.password = password
         res.send('user login successful')
@@ -44,7 +45,7 @@ router.post('/logout', isAuthenticated, (req, res) => {
 })
 
 router.post('/loggedin', (req, res) => {
-  res.send(req.session.username)
+  res.send(req.session.user)
 })
 
 module.exports = router

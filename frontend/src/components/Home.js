@@ -10,6 +10,8 @@ const Home = () => {
   const [gText, setGText] = useState('')
   const [users, setUsers] = useState([])
   const [currUser, setCurrUser] = useState({})
+  const [newFriend, setNewFriend] = useState(false)
+  const [fText, setFText] = useState('')
 
   const nav = useNavigate()
 
@@ -32,7 +34,8 @@ const Home = () => {
     try {
       const { data } = await axios.post('/account/loggedin')
       if (data !== '' && data !== undefined) {
-        setUsername(data)
+        setUsername(data.username)
+        setCurrUser(data)
         setLogged(true)
       }
     } catch (err) {
@@ -48,6 +51,23 @@ const Home = () => {
       if (data === 'Game added') {
         setNewGame(false)
         setGText('')
+        window.alert('Game added!')
+      }
+    } catch (err) {
+      window.alert('Error: addG')
+    }
+  }
+
+  const addF = async user => {
+    try {
+      const { _id } = user
+      const { data } = await axios.post('/api/friend', { _id, friend: fText })
+      setNewFriend(false)
+      setFText('')
+      if (data === 'Friend added') {
+        window.alert('Friend added!')
+      } else {
+        window.alert('Error: no user with that username!')
       }
     } catch (err) {
       window.alert('Error: addG')
@@ -76,7 +96,12 @@ const Home = () => {
     <div className="container">
       {logged && (
         <div className="page-header">
-          <h1> {username}'s profile! </h1>
+          <h1>
+            {username}
+            &apos;s
+            {' '}
+            profile!
+          </h1>
           <div align="right">
             <button
               type="button"
@@ -86,9 +111,7 @@ const Home = () => {
                 setLogged(false)
               }}
             >
-              {' '}
               Logout
-              {' '}
             </button>
           </div>
           <br />
@@ -98,10 +121,44 @@ const Home = () => {
               className="btn mx-1 btn-primary"
               onClick={() => setNewGame(true)}
             >
-              {' '}
-              Add Game!{' '}
+              Add Game!
             </button>
           </div>
+
+          <div align="center">
+            <button
+              type="button"
+              className="btn mx-1 btn-primary"
+              onClick={() => setNewFriend(true)}
+            >
+              Add Friend!
+            </button>
+          </div>
+
+          {newFriend && (
+            <div className="container">
+              <h4> New Friend: </h4>
+              <input
+                onChange={e => setFText(e.target.value)}
+                placeholder="Write new friend username here"
+              />
+              <br />
+              <button
+                type="button"
+                className="btn mx-1 btn-primary"
+                onClick={() => addF(currUser)}
+              >
+                Submit Friend Request!
+              </button>
+              <button
+                type="button"
+                className="btn mx-1 btn-danger"
+                onClick={() => setNewFriend(false)}
+              >
+                Cancel
+              </button>
+            </div>
+          )}
 
           {newGame && (
             <div className="container">
@@ -116,35 +173,55 @@ const Home = () => {
                 className="btn mx-1 btn-primary"
                 onClick={() => addG(currUser)}
               >
-                {' '}
-                Submit Game!{' '}
+                Submit Game!
               </button>
               <button
                 type="button"
                 className="btn mx-1 btn-danger"
                 onClick={() => setNewGame(false)}
               >
-                {' '}
-                Cancel{' '}
+                Cancel
               </button>
             </div>
           )}
         </div>
       )}
-      {!logged && <Link to="/account/login"> Log in to view profile </Link>}
+      {!logged && (
+        <>
+          <Link to="/account/login"> Log in to view profile </Link>
+          <hr />
+        </>
+      )}
       <br />
 
       <h3> All Users: </h3>
       <div className="container">
         {users.map(u => (
           <div key={u._id} className="card">
-            <h4> {u.username}'s Games </h4>
+            <h4>
+              {u.username}
+              &apos;s
+              {' '}
+              Games:
+            </h4>
             {u.games.map(g => (
-              // have something here that hides
               <div key={uuidv4()}>
-                <p className="card-text"> {g} </p>
+                <p className="card-text">{g}</p>
               </div>
             ))}
+            {u.games.length === 0 && <p> No games :( </p>}
+            <h4>
+              {u.username}
+              &apos;s
+              {' '}
+              Friends:
+            </h4>
+            {u.friends.map(f => (
+              <div key={uuidv4()}>
+                <p className="card-text">{f}</p>
+              </div>
+            ))}
+            {u.friends.length === 0 && <p> No friends :( </p>}
           </div>
         ))}
       </div>

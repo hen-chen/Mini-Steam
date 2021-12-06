@@ -16,5 +16,5 @@ ReactDOM.render(
       <Route path="/games" element={<GetGames />} />
     </Routes>
   </BrowserRouter>,
-  document.getElementById('react-root')
+  document.getElementById('react-root'),
 )
