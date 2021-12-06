@@ -2,16 +2,13 @@ const express = require('express')
 require('isomorphic-fetch')
 
 const { isAuthenticated } = require('../middlewares/isAuthenticated')
-const Game = require('../models/games')
 const User = require('../models/user')
 
 const router = express.Router()
 
-router.get('/getgames', async (req, res) => {
+router.get('/getgames', async (req, res, next) => {
   try {
-    const url = await fetch(
-      'https://steamspy.com/api.php?request=top100in2weeks'
-    )
+    const url = await fetch('https://steamspy.com/api.php?request=top100in2weeks')
     const urlJSON = await url.json()
     res.send(urlJSON)
   } catch (err) {
@@ -35,9 +32,9 @@ router.post('/api/add', isAuthenticated, async (req, res, next) => {
     User.findByIdAndUpdate(
       _id,
       { $push: { games: game } },
-      function (err, model) {
-        if (err !== null) console.log(err)
-      }
+      (err, model) => {
+        if (err !== null) res.send('Error adding Game')
+      },
     )
     res.send('Game added')
   } catch (err) {
@@ -54,9 +51,9 @@ router.post('/api/friend', isAuthenticated, async (req, res, next) => {
       User.findByIdAndUpdate(
         _id,
         { $push: { friends: friend } },
-        function (err, model) {
-          if (err !== null) console.log(err)
-        }
+        (err, model) => {
+          if (err !== null) res.send('Error adding friend')
+        },
       )
       res.send('Friend added')
     }

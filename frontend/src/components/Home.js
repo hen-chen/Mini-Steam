@@ -21,6 +21,7 @@ const Home = () => {
       if (data === 'user logged out') {
         nav('/account/login')
         setUsername('')
+        setCurrUser({})
         setLogged(false)
       } else {
         window.alert('User not logged out successfully')
@@ -70,7 +71,7 @@ const Home = () => {
         window.alert('Error: no user with that username!')
       }
     } catch (err) {
-      window.alert('Error: addG')
+      window.alert('Error: addF')
     }
   }
 
@@ -94,7 +95,7 @@ const Home = () => {
 
   return (
     <div className="container">
-      {logged && (
+      {logged && username !== '' && (
         <div className="page-header">
           <h1>
             {username}
@@ -115,28 +116,25 @@ const Home = () => {
             </button>
           </div>
           <br />
-          <div align="center">
-            <button
-              type="button"
-              className="btn mx-1 btn-primary"
-              onClick={() => setNewGame(true)}
-            >
-              Add Game!
-            </button>
-          </div>
 
-          <div align="center">
-            <button
-              type="button"
-              className="btn mx-1 btn-primary"
-              onClick={() => setNewFriend(true)}
-            >
-              Add Friend!
-            </button>
-          </div>
+          <button
+            type="button"
+            className="btn mx-1 btn-primary"
+            onClick={() => setNewGame(true)}
+          >
+            Add Game!
+          </button>
+
+          <button
+            type="button"
+            className="btn mx-1 btn-primary"
+            onClick={() => setNewFriend(true)}
+          >
+            Add Friend!
+          </button>
 
           {newFriend && (
-            <div className="container">
+            <div className="card">
               <h4> New Friend: </h4>
               <input
                 onChange={e => setFText(e.target.value)}
@@ -161,7 +159,7 @@ const Home = () => {
           )}
 
           {newGame && (
-            <div className="container">
+            <div className="card">
               <h4> New Game: </h4>
               <input
                 onChange={e => setGText(e.target.value)}
@@ -206,7 +204,11 @@ const Home = () => {
             </h4>
             {u.games.map(g => (
               <div key={uuidv4()}>
-                <p className="card-text">{g}</p>
+                <p className="card-text">
+                  •
+                  {' '}
+                  {g}
+                </p>
               </div>
             ))}
             {u.games.length === 0 && <p> No games :( </p>}
@@ -218,7 +220,11 @@ const Home = () => {
             </h4>
             {u.friends.map(f => (
               <div key={uuidv4()}>
-                <p className="card-text">{f}</p>
+                <p className="card-text">
+                  •
+                  {' '}
+                  {f}
+                </p>
               </div>
             ))}
             {u.friends.length === 0 && <p> No friends :( </p>}

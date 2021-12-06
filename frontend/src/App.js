@@ -5,7 +5,9 @@ import './App.css'
 
 const App = () => (
   <>
-    <h1 align="center"> Mini Steam </h1>
+    <h1 align="center">
+      <u>Mini Steam</u>
+    </h1>
     <Home />
   </>
 )
